@@ -2,18 +2,21 @@ import { GraphQLString, GraphQLID } from "graphql";
 import { SubjectType } from "../TypeDefs/Subject"
 import { MessageType } from "../TypeDefs/Messages"
 import { Subject } from "../../Entities/Subject";
+import { getRepository } from "typeorm";
 
 export const CREATE_SUBJECT = {
     type: SubjectType,
-    args: {
-      subjectName: { type: GraphQLString }
-    },
+    args: { subjectName: { type: GraphQLString } },
     async resolve(parent: any, args: any) {
-       const { subjectName } = args;
-       await Subject.insert({ subjectName: subjectName });
+
+      await getRepository(Subject).createQueryBuilder()
+         .insert()
+         .into(Subject)
+         .values([ {subjectName: args.subjectName} ])
+         .execute();
+
        return args;
     } 
-
 }
 
 export const UPDATE_SUBJECT = {
@@ -23,17 +26,13 @@ export const UPDATE_SUBJECT = {
       subjectName: { type: GraphQLString }
    },
    async resolve(parent: any, args: any) {
-      const { id, subjectName } = args;
-      const subject = await Subject.findOne({ id: id });
 
-      if(!subject) {
-         throw new Error("Subject with ID: " + id + " does not exists");
-      }
+      await getRepository(Subject).createQueryBuilder()
+         .update(Subject)
+         .set({ subjectName: args.subjectName })
+         .where("id = :id", { id: args.id })
+         .execute();
 
-      await Subject.update(
-         { id: id },
-         { subjectName: subjectName }
-      );
       return { successful: true, message: "SUBJECT SUCCESSFULLY UPDATED" };
    }
 }
@@ -41,13 +40,15 @@ export const UPDATE_SUBJECT = {
 
 export const DELETE_SUBJECT = {
    type: MessageType,
-   args: {
-      id: { type: GraphQLID }
-   },
+   args: { id: { type: GraphQLID } },
    async resolve(parent: any, args: any) {
-      const { id } = args;
-      await Subject.delete({ id: id });
+     
+      await getRepository(Subject).createQueryBuilder()
+         .delete()
+         .from(Subject)
+         .where("id = :id", { id: args.id })
+         .execute();
+
       return { successful: true, message: "SUBJECT SUCCESSFULLY DELETED" };
    }
-    
 }

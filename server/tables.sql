@@ -308,4 +308,59 @@ WHERE sp.day_id = 1;
 
 
 
+    function mostProfitableDepartment(listItems) {
+       var highestSales = 0;
+       var profitableDept = '';
+       //console.log(listItems);
+
+        for(var i = 0; i < listItems.length; i++) {
+          	var listItem = listItems[i];
+          
+            if(listItem.sales > highestSales) {
+                highestSales = listItem.sales;
+                profitableDept = listItem.department;
+            }
+        }
+        //console.log("Profitable Dept: " + profitableDept);
+        //console.log("Highest Sales: " + highestSales);
+      	return profitableDept;
+    }	
+
+	function mostProfitableDay(salesItems) {
+        var obj = {};
+
+        for (let i = 0; i < salesItems.length; i++) {
+            const day = salesItems[i].day; //monday
+            const sales = salesItems[i].sales; // 4500
+      
+          /*if (salesItems[i][day] == undefined) {
+            obj[day] = sales; // {monday: 4500}
+          }else {
+            obj[day] += sales;
+          }*/
+          
+           if(obj[day] == undefined){
+                obj[day] = sales; // {monday: 4500}
+              console.log(obj[day])
+            } else {
+                obj[day] += sales;
+            }
+            //console.log(obj[day])
+        }
+
+        var maxDay = "", maxSale=0;
+//console.log(obj);
+        for (const key in obj) {
+          console.log(obj[key]);
+            if(obj[key] >= maxSale) {
+                maxDay = key;
+                maxSale = obj[key]
+            }
+        }
+      
+        //console.log(maxDay)
+        return maxDay;
+    }
+
+
 

@@ -1,34 +1,48 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, ManyToMany } from "typeorm";
 import { Subject } from "./Subject";
 import { Grade } from "./Grade";
 import { Days } from "./Days";
+import { Learner } from './Learner'
 
 @Entity()
-export class Lesson extends BaseEntity {
+export class Lesson {
     @PrimaryGeneratedColumn()
     id!: number;
 
-    @Column()
+    @Column({name: 'lesson_name'})
     lessonName!: string;
 
     @Column()
-    subject_id!: number;
+    time!: string;
 
-    @ManyToOne(() => Subject, (subject: Subject) => subject.lessons)
-    @JoinColumn({name: 'subject_id'})
-    subject!: Subject;
+    @Column({name: 'subject_id'})
+    subjectId!: number;
 
-    @Column()
-    grade_id!: number;
+    @Column({name: 'grade_id'})
+    gradeId!: number;
 
-    @ManyToOne(() => Grade, (grade: Grade) => grade.lessons)
-    @JoinColumn({name: 'grade_id'})
-    grade!: Grade;
+    @Column({name: 'day_id'})
+    dayId!: number;
 
-    @Column()
-    day_id!: number;
+    // @ManyToOne(() => Subject, (subject: Subject) => subject.lessons)
+    // @JoinColumn({name: 'subject_id'})
+    // subject!: Subject;
 
-    @ManyToOne(() => Days, (day: Days) => day.lessons)
-    @JoinColumn({name: 'day_id'})
-    day!: Days;
+    // @ManyToOne(() => Grade, (grade: Grade) => grade.lessons)
+    // @JoinColumn({name: 'grade_id'})
+    // grade!: Grade;
+
+    // @ManyToOne(() => Days, (day: Days) => day.lessons)
+    // @JoinColumn({name: 'day_id'})
+    // day!: Days;
+
+
+    @ManyToMany(() => Learner, learner => learner.lessons)
+    learners!: Array<Learner>;
+
 }
+
+
+// ALTER TABLE "lesson" 
+// ALTER COLUMN "time" 
+// SET DEFAULT '12:00',

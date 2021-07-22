@@ -1,9 +1,12 @@
 import {  } from 'graphql';
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, ManyToMany, JoinTable } from 'typeorm';
 import { Grade } from '../Entities/Grade';
+import { Subject } from '../Entities/Subject';
+import { Lesson } from './Lesson';
+
 
 @Entity()
-export class Learner extends BaseEntity {
+export class Learner {
     @PrimaryGeneratedColumn()
     id!: number;
 
@@ -19,11 +22,19 @@ export class Learner extends BaseEntity {
     @Column()
     tokens!: string;
 
-    @Column({ nullable: true })
-    grade_id!: number;
+    @Column({ name: 'grade_id' })
+    gradeId!: number;
 
     @ManyToOne(() => Grade, (grade: Grade) => grade.learners)
     @JoinColumn({name: 'grade_id'})
     grade!: Grade;
+
+    @ManyToMany(type => Subject, subject => subject.learners)
+    @JoinTable({name: "learner_subject"})
+    subjects!: Subject[];
+
+    @ManyToMany(type => Lesson, lesson => lesson.learners)
+    @JoinTable({name: "learner_lesson"})
+    lessons!: Array<Lesson>;
 
 }

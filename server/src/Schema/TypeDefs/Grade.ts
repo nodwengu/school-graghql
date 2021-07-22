@@ -1,6 +1,4 @@
-import { GraphQLObjectType, GraphQLID, GraphQLString, GraphQLList } from 'graphql';
-import { Learner } from '../../Entities/Learner';
-import { LearnerType } from './Learner';
+import { GraphQLObjectType, GraphQLID, GraphQLString } from 'graphql';
 
 export const GradeType = new GraphQLObjectType({
     name: "Grade",

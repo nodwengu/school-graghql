@@ -9,6 +9,8 @@ import { Days } from './Entities/Days';
 import { Learner } from './Entities/Learner';
 import { Subject } from './Entities/Subject';
 import { Lesson } from './Entities/Lesson';
+import { LearnerSubject } from './Entities/LearnerSubject';
+import { Teacher } from './Entities/Teacher'
 
 const main = async () => {
 
@@ -19,8 +21,9 @@ const main = async () => {
         password: "thando123",
         logging: true,
         synchronize: false,
-        entities: [Lesson, Subject, Learner, Grade, Days]
-        //Subject, Learner, Grade, Days
+        entities: [Lesson, Subject, Learner, Grade, Days, LearnerSubject]
+        
+        // Lesson, Subject, Learner, Grade, Days, LearnerSubject, Teacher
     });
 
     const app = express();
@@ -31,8 +34,8 @@ const main = async () => {
         graphiql: true
     }));
 
-    app.listen(3001, () => {
-        console.log(`SERVER RUNNING ON PORT 3001`);
+    app.listen(3000, () => {
+        console.log(`SERVER RUNNING ON PORT 4001`);
         
     });
 

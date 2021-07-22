@@ -6,26 +6,47 @@ import { SubjectType } from "./Subject";
 import { DaysType } from "./Days";
 import { Subject } from "../../Entities/Subject";
 import { Days } from "../../Entities/Days";
+import { resolve } from "path";
+import { getRepository } from "typeorm";
 
 export const LessonType = new GraphQLObjectType({
    name: "Lesson",
    fields: () => ({
       id: { type: GraphQLID },
       lessonName: { type: GraphQLString },
-      subject_id: { type: GraphQLID },
-      grade_id: { type: GraphQLID },
-      day_id: { type: GraphQLID },
+      time: { type: GraphQLString },
+      subjectId: { type: GraphQLID },
+      gradeId: { type: GraphQLID },
+      dayId: { type: GraphQLID },
       subject: {
          type: SubjectType,
-         resolve: async (lesson: Lesson) => await Subject.findOne({ id: lesson.subject_id })
+         args: { id: {type: GraphQLID} },
+         async resolve(lesson: Lesson, args: any) {
+            return await getRepository(Subject).createQueryBuilder('s')
+               .select(['s.id', 's.subjectName'])
+               .where('s.id = :id', { id: lesson.subjectId })
+               .getOne();        
+         }
       },
       grade: {
          type: GradeType,
-         resolve: async (lesson: Lesson) => await Grade.findOne({ id: lesson.grade_id }),
+         args: { id: {type: GraphQLID} },
+         async resolve(lesson: Lesson, args: any) {
+            return await getRepository(Grade).createQueryBuilder('g')
+               .select(['g.id', 'g.gradeName'])
+               .where('g.id = :id', { id: lesson.gradeId })
+               .getOneOrFail();
+         }
       },
       day: {
          type: DaysType,
-         resolve: async (lesson: Lesson) => await Days.findOne({ id: lesson.day_id })
+         args: { id: {type: GraphQLID} },
+         async resolve(lesson: Lesson, args: any) {
+            return await getRepository(Days).createQueryBuilder('d')
+               .select(['d.id', 'd.dayName'])
+               .where('d.id = :id', { id: lesson.dayId })
+               .getOne();
+         }
       },
 
    })
