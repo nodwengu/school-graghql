@@ -6,10 +6,8 @@ import { getRepository } from 'typeorm';
 export const GET_ALL_DAYS = {
    type: new GraphQLList(DaysType),
    async resolve() { 
-      return await getRepository(Days).createQueryBuilder()
-         .select('d.id')
-         .addSelect('d.dayName')
-         .from(Days, 'd')
+      return await getRepository(Days).createQueryBuilder('d')
+         .select(['d.id', 'd.dayName'])
          .orderBy('d.id')
          .getMany();
    }
@@ -20,10 +18,8 @@ export const GET_DAY = {
    args: { id: { type: GraphQLID } },
    async resolve(parent: any, args: any) {
       
-      const day = await getRepository(Days).createQueryBuilder()
-         .select('d.id')
-         .addSelect('d.dayName')
-         .from(Days, 'd')
+      const day = await getRepository(Days).createQueryBuilder('d')
+         .select(['d.id', 'd.dayName'])
          .where('d.id = :id', { id: args.id })
          .getOne();
      

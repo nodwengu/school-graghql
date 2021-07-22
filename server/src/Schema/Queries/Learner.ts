@@ -11,15 +11,8 @@ export const GET_ALL_LEARNERS = {
    type: GraphQLList(LearnerType),
    description: 'List of learners',
    async resolve() {
-
-      return await getRepository(Learner).createQueryBuilder()
-         .select("l.firstName")
-         .addSelect("l.id")
-         .addSelect("l.lastName")
-         .addSelect("l.email")
-         .addSelect("l.tokens")
-         .addSelect("l.gradeId")
-         .from(Learner, 'l')
+      return await getRepository(Learner).createQueryBuilder("l")
+         .select(["l.firstName", "l.id", "l.lastName", "l.email", "l.tokens", "l.gradeId"])
          .orderBy("l.id")
          .getMany();
    }
@@ -32,7 +25,7 @@ export const GET_LEARNER = {
       id: { type: GraphQLID }
    },
    async resolve(parent: any, args: any) {
-      const learner =  await getRepository(Learner).createQueryBuilder('l')
+      const learner =  await getRepository(Learner).createQueryBuilder("l'")
          .select([ "l.id", "l.firstName", "l.lastName", "l.email", "l.tokens", "l.gradeId" ])
          .where("l.id = :id", { id: args.id })
          .orderBy("l.id")

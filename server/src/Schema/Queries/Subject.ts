@@ -8,12 +8,8 @@ import { getRepository } from "typeorm"
 export const GET_ALL_SUBJECTS = {
    type: new GraphQLList(SubjectType),
    async resolve(parent: any, args: any) {
-
-      return await getRepository(Subject)
-         .createQueryBuilder("subject")
-         .select("s.subjectName")
-         .addSelect("s.id")
-         .from(Subject, "s")
+      return await getRepository(Subject).createQueryBuilder("s")
+         .select(["s.subjectName", "s.id"])
          .orderBy("s.id")
          .getMany();
    }
@@ -23,12 +19,8 @@ export const GET_SUBJECT = {
    type: SubjectType,
    args: { id: { type: GraphQLID } },
    async resolve(parent: any, args: any) {
-
-      const subject = await getRepository(Subject)
-         .createQueryBuilder()
-         .select("s.id")
-         .addSelect("s.subjectName")
-         .from(Subject, "s")
+      const subject = await getRepository(Subject).createQueryBuilder("s")
+         .select(["s.id", "s.subjectName"])
          .where("s.id = :id", {id: args.id})
          .getOne();
 
